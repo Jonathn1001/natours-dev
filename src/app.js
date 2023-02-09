@@ -2,6 +2,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
+const compression = require('compression');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
@@ -51,6 +52,8 @@ app.use(mongoSanitize());
 
 // ? Data sanitization against XSS
 app.use(xss());
+
+app.use(compression());
 
 // app.use((req, res, next) => {
 //   console.log('cookies', req.cookies);
