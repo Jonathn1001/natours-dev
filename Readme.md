@@ -42,4 +42,6 @@ start application in production
 
 # 🔥 The application was deployed to heroku : [Elgnas-Natours](https://elgnas-natours.herokuapp.com/)
 
+use can use the username : monica@example.com and password 123@abcD to login.
+
 # ❤️ Thank you for reading.
