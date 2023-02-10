@@ -10,6 +10,7 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const globalErrorHandler = require('./controllers/errorController');
+const bookingController = require('./controllers/bookingController');
 const routes = require('./routes');
 
 // Start express app
@@ -30,7 +31,6 @@ app.set('views', path.join(__dirname, 'views'));
 // * Global Middlewares
 
 // ? Serving static files
-// app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static('public/img'));
 app.use('/css', express.static('public/css'));
 app.use('/js', express.static('public/js'));
@@ -52,6 +52,13 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again in an hour!',
 });
 app.use('/api', limiter);
+
+// ? Implement Stripe Webhook Checkout
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 
 // ? Body parsers: reading data from body into res.body
 app.use(express.json({ limit: '10kb' }));

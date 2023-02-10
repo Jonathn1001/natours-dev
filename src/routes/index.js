@@ -1,8 +1,8 @@
-const tourRouter = require('./tour-routes');
-const userRouter = require('./user-routes');
-const reviewRouter = require('./review-routes');
-const viewRouter = require('./view-routes');
-const bookingRouter = require('./booking-routes');
+const tourRouter = require('./tourRoutes');
+const userRouter = require('./userRoutes');
+const reviewRouter = require('./reviewRoutes');
+const viewRouter = require('./viewRoutes');
+const bookingRouter = require('./bookingRoutes');
 const AppError = require('../utils/AppError');
 
 const routes = (app) => {

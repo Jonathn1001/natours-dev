@@ -1,4 +1,7 @@
 const dotenv = require('dotenv');
+// Inject .env file into current process
+dotenv.config({ path: './config.env' });
+
 const app = require('./src/app');
 const db = require('./src/config/db');
 
@@ -7,8 +10,6 @@ process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION !!! Shutting down...');
   process.exit(1);
 });
-
-dotenv.config({ path: './config.env' });
 
 const port = process.env.PORT || 5000;
 
