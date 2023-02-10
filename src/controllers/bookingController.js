@@ -27,7 +27,7 @@ exports.getCheckoutSession = catchAsync(async (req, res) => {
       },
     ],
     payment_method_types: ['card'],
-    success_url: `${url}/my-tours`,
+    success_url: `${url}/my-tours?alerts=booking`,
     cancel_url: `${url}/tours/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
@@ -48,7 +48,7 @@ const createBookingCheckout = async (session) => {
   await Booking.create({ tour, user, price });
 };
 
-exports.webhookCheckout = async (req, res, next) => {
+exports.webhookCheckout = (req, res) => {
   const signature = req.headers['stripe-signature'];
 
   let event;
