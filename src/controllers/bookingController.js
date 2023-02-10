@@ -5,9 +5,8 @@ const Tour = require('../models/TourModel');
 const User = require('../models/UserModel');
 const Booking = require('../models/BookingModel');
 const factory = require('./handlerFactory');
-const AppError = require('../utils/AppError');
 
-exports.getCheckoutSession = catchAsync(async (req, res, next) => {
+exports.getCheckoutSession = catchAsync(async (req, res) => {
   // 1. Get the currently book tour
   const tour = await Tour.findById(req.params.tourId);
   // 2. Create checkout session
@@ -21,7 +20,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
           product_data: {
             name: `${tour.name} Tour`,
             description: tour.summary,
-            images: [`${url}/${tour.imageCover}`],
+            images: [`${url}/img/tours/${tour.imageCover}`],
           },
         },
         quantity: 1,
@@ -54,7 +53,7 @@ exports.webhookCheckout = async (req, res, next) => {
 
   let event;
   try {
-    event = await stripe.webhooks.constructEvent(
+    event = stripe.webhooks.constructEvent(
       req.body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
@@ -63,16 +62,8 @@ exports.webhookCheckout = async (req, res, next) => {
     res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Handle the event
-  switch (event.type) {
-    case 'checkout.session.completed':
-      createBookingCheckout(event.data.object);
-      break;
-    // ... handle other event types
-    default:
-      return next(new AppError('Checkout Failed'));
-  }
-
+  if (event.type === 'checkout.session.completed')
+    createBookingCheckout(event.data.object);
   res.json({ received: true });
 };
 
