@@ -1,6 +1,5 @@
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -56,16 +55,12 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // ? Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
+
 app.post(
   '/webhook-checkout',
-  bodyParser.raw({ type: '*/*' }),
+  express.raw({ type: 'application/json' }),
   bookingController.webhookCheckout
 );
-
-app.use((req, res, next) => {
-  console.log(req);
-  next();
-});
 
 // ? Body parsers: reading data from body into res.body
 app.use(express.json({ limit: '10kb' }));
