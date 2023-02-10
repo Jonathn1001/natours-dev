@@ -11,7 +11,10 @@ const morgan = require('morgan');
 const globalErrorHandler = require('./controllers/errorController');
 const routes = require('./routes');
 
+// Start express app
 const app = express();
+
+app.enable('trust proxy');
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -54,11 +57,6 @@ app.use(mongoSanitize());
 app.use(xss());
 
 app.use(compression());
-
-// app.use((req, res, next) => {
-//   console.log('cookies', req.cookies);
-//   next();
-// });
 
 // ? Prevent HTTP Parameter Pollutiourn Attacks
 app.use(

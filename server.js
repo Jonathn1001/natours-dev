@@ -27,4 +27,12 @@ process.on('unhandledRejection', (err) => {
   });
 });
 
-// request => router => controller (handler function) <=> model
+process.on('SIGTERM', () => {
+  console.log(
+    'SIGTERM Received !!!Graceful shutdown start',
+    new Date().toISOString()
+  );
+  server.close(() => {
+    console.log('Process terminated!');
+  });
+});
