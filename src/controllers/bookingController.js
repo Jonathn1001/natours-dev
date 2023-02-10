@@ -49,12 +49,12 @@ const createBookingCheckout = async (session) => {
   await Booking.create({ tour, user, price });
 };
 
-exports.webhookCheckout = (req, res, next) => {
-  const signature = req.headers['strip-signature'];
+exports.webhookCheckout = async (req, res, next) => {
+  const signature = req.headers['stripe-signature'];
 
   let event;
   try {
-    event = stripe.webhooks.constructEvent(
+    event = await stripe.webhooks.constructEvent(
       req.body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
@@ -73,7 +73,7 @@ exports.webhookCheckout = (req, res, next) => {
       return next(new AppError('Checkout Failed'));
   }
 
-  res.status(200).json({ received: true });
+  res.json({ received: true });
 };
 
 exports.createBooking = factory.createOne(Booking);
