@@ -53,7 +53,7 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// ? Implement Stripe Webhook Checkout
+// ? Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
 app.post(
   '/webhook-checkout',
   express.raw({ type: 'application/json' }),
@@ -73,7 +73,7 @@ app.use(xss());
 
 app.use(compression());
 
-// ? Prevent HTTP Parameter Pollutiourn Attacks
+// ? Prevent HTTP Parameter Pollution Attacks
 app.use(
   hpp({
     whitelist: [

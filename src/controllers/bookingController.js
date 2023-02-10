@@ -27,7 +27,7 @@ exports.getCheckoutSession = catchAsync(async (req, res) => {
       },
     ],
     payment_method_types: ['card'],
-    success_url: `${url}/my-tours?alerts=booking`,
+    success_url: `${url}/my-tours?alert=booking`,
     cancel_url: `${url}/tours/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
