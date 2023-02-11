@@ -4,27 +4,31 @@ This repo contains project files and configuration
 
 # :wrench: Backend
 
-NodeJS/ Express
+## [NodeJS](https://nodejs.org/en/) / [Express](https://expessjs.com/)
 
 # :department_store: Database
 
-Mongoose/MongoDB
+## [Mongoose](https://mongoosejs.com/) / [MongoDB](https://www.mongodb.com/)
 
 # :page_facing_up: View engine
 
-Pug
+Built-in **Pug** Template
 
-# :e-mail: Email
+# :e-mail: Email Service
 
-Sending Email using SMTP of Sendgrid
+## Send via SMTP Service
 
-# :credit_card: Payment
+**Development** : [Mailtrap](https://github.com/)
 
-Stripe
+**Production** : [SendGrid](https://sendgrid.com/)
+
+# :credit_card: Payment Service
+
+## [Stripe](https://stripe.com)
 
 # :earth_americas: Maps
 
-Maxbox
+## [Maxbox](https://www.mapbox.com/)
 
 ################################
 
@@ -32,13 +36,15 @@ Maxbox
 
 # npm install
 
+install dependencies needed for application.
+
 # npm run start:dev
 
-start application in development mode
+Start application in **Development** mode.
 
 # npm run start:prod
 
-start application in production
+Start application in **Production** mode.
 
 # 🔥 The application was deployed to heroku : [Elgnas-Natours](https://elgnas-natours.herokuapp.com/)
 
