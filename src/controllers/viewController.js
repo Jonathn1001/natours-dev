@@ -9,7 +9,7 @@ exports.getOverview = catchAsync(async (req, res) => {
   const tours = await Tour.find();
   // 2. Build template
   // 3. Render that template using tour data
-  res.status(200).render('overview', {
+  res.status(200).render('pages/tour/overview', {
     title: 'All Tours',
     tours,
   });
@@ -30,20 +30,20 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // 2. Build template
   // 3. Render Template With Injected Data
 
-  res.status(200).render('tour', {
+  res.status(200).render('pages/tour/detail', {
     title: `${tour.name} Tour`,
     tour,
   });
 });
 
 exports.getLoginForm = catchAsync(async (req, res) => {
-  res.status(200).render('login', {
+  res.status(200).render('pages/auth/login', {
     title: 'Log into your account',
   });
 });
 
 exports.getMe = catchAsync(async (req, res) => {
-  res.status(200).render('account', {
+  res.status(200).render('pages/user/account', {
     title: 'Your Account',
     user: req.user,
   });
@@ -56,7 +56,7 @@ exports.getMyTours = catchAsync(async (req, res) => {
   const tourIDs = bookings.map((el) => el.tour);
   const tours = await Tour.find({ _id: { $in: tourIDs } });
 
-  res.status(200).render('overview', {
+  res.status(200).render('pages/tour/overview', {
     title: 'My Tours',
     tours,
   });

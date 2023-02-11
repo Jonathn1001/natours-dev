@@ -11,14 +11,14 @@ html
       //- interpolation syntax #{var}
   body(data-alert=`${alert ? alert : ''}`) 
     // Header
-    include _header
+    include partials/_header
    
     // Content
     block content
       h1 This is a place holder heading
 
     // Footer
-    include _footer
+    include partials/_footer
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.2/axios.min.js')
   script(src='https://js.stripe.com/v3')

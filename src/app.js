@@ -14,16 +14,15 @@ const globalErrorHandler = require('./controllers/errorController');
 const bookingController = require('./controllers/bookingController');
 const routes = require('./routes');
 
-// Start express app
+// ? Start express app
 const app = express();
 
-// Implement Cors
+// ? Implement Cors - Access-Control-Allow-Origin *
 app.use(cors());
-// Access-Control-Allow-Origin *
-
-// Handle options request (in preflight phrase of non-simple request: PUT, PATCH, DELETE)
+//  ? Handle options request (in preflight phrase of non-simple request: PUT, PATCH, DELETE)
 app.options('*', cors());
 
+// ?
 app.enable('trust proxy');
 
 app.set('view engine', 'pug');
