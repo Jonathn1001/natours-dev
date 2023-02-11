@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { catchAsync } = require('../helper');
 const Tour = require('../models/TourModel');

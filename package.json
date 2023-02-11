@@ -1,7 +1,7 @@
 {
-  "name": "natour",
+  "name": "elgnas-natours",
   "version": "1.0.0",
-  "description": "learning node, express and mongoDB",
+  "description": "personal project for elgnas-natours",
   "main": "app.js",
   "scripts": {
     "start": "node server.js",
@@ -11,7 +11,7 @@
     "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
     "build:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
   },
-  "author": "Gnas",
+  "author": "Elgnas",
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

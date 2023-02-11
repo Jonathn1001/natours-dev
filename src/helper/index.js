@@ -33,6 +33,7 @@ const catchAsync = (fn) => (req, res, next) => {
   fn(req, res, next).catch(next);
 };
 
+// ? Filter Object by allowed fields
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((item) => {

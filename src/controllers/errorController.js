@@ -11,7 +11,7 @@ const sendErrorDev = (err, req, res) => {
     });
   }
   // 2. Rendered Error Page
-  return res.status(err.statusCode).render('error', {
+  return res.status(err.statusCode).render('pages/error', {
     title: 'Something went wrong!',
     message: err.message,
   });
@@ -39,7 +39,7 @@ const sendErrorProduction = (err, req, res) => {
   // 2. Rendered Error Page
   // !! A) Operational, trusted error: send message to client
   if (err.isOperational)
-    return res.status(err.statusCode).render('error', {
+    return res.status(err.statusCode).render('pages/error', {
       title: 'Something went wrong!',
       message: err.message,
     });
@@ -48,7 +48,7 @@ const sendErrorProduction = (err, req, res) => {
   // ? 1. Log error
   console.log('Error 💣', err);
   // ? 2. Send Generic message
-  return res.status(err.statusCode).render('error', {
+  return res.status(err.statusCode).render('pages/error', {
     title: 'Something went wrong!',
     message: 'Please try again later',
   });

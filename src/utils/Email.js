@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 const pug = require('pug');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const htmlToText = require('html-to-text');
 
 class Email {
@@ -13,7 +12,7 @@ class Email {
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
-      // Sengrid
+      // Sendgrid
       return nodemailer.createTransport({
         service: 'SendGrid',
         auth: {
@@ -44,7 +43,6 @@ class Email {
       `${__dirname}/../views/emails/${template}.pug`,
       { firstName: this.firstName, url: this.url, subject }
     );
-
     // 2. Define email options
     const mailOptions = {
       from: this.from,
