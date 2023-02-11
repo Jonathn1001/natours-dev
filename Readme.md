@@ -18,7 +18,7 @@ Built-in **Pug** Template
 
 ## Send via SMTP Service
 
-**Development** : [Mailtrap](https://https://mailtrap.io/)
+**Development** : [Mailtrap](https://mailtrap.io/)
 
 **Production** : [SendGrid](https://sendgrid.com/)
 
