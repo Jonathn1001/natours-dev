@@ -29,7 +29,6 @@ exports.getTour = catchAsync(async (req, res, next) => {
 
   // 2. Build template
   // 3. Render Template With Injected Data
-
   res.status(200).render('pages/tour/detail', {
     title: `${tour.name} Tour`,
     tour,
@@ -45,6 +44,18 @@ exports.getLoginForm = catchAsync(async (req, res) => {
 exports.getSignupForm = catchAsync(async (req, res) => {
   res.status(200).render('pages/auth/signup', {
     title: 'Register your account',
+  });
+});
+
+exports.getVerifyAccountForm = catchAsync(async (req, res) => {
+  res.status(200).render('pages/auth/verify-account', {
+    title: 'Verify account',
+  });
+});
+
+exports.getActiveAccountForm = catchAsync(async (req, res) => {
+  res.status(200).render('pages/auth/active-account', {
+    title: 'Active account',
   });
 });
 

@@ -20,7 +20,7 @@ const app = express();
 // ? Implement Cors - Access-Control-Allow-Origin *
 app.use(cors());
 //  ? Handle options request (in preflight phrase of non-simple request: PUT, PATCH, DELETE)
-app.options('*', cors());
+// app.options('*', cors());
 
 // ?
 app.enable('trust proxy');
