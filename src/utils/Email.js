@@ -59,6 +59,10 @@ class Email {
     await this.send('welcome', 'Welcome to the Natours Family');
   }
 
+  async sendAccountVerification() {
+    await this.send('accountVerification', 'Your account verification');
+  }
+
   async sendPasswordReset() {
     await this.send(
       'passwordReset',

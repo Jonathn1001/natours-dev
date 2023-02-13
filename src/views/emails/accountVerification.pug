@@ -1,0 +1,16 @@
+extend baseEmail 
+
+block content 
+  p Hi #{firstName},
+    p  You're almost ready to start enjoying Natours, Simply click the big green button below to verify your email address.
+    table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+      tbody
+        tr
+          td(align='center')
+            table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+              tbody
+                tr
+                  td
+                    a(href=`${url}`, target='_blank') Verify your account
+    p  Kind regards,
+    p  - Elgnas , Admin.

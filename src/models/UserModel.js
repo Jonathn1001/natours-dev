@@ -45,11 +45,13 @@ const UserSchema = mongoose.Schema(
     passwordChangedAt: {
       type: Date,
     },
+    verifyAccountToken: String,
+    verifyAccountExpires: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
     active: {
       type: Boolean,
-      default: true,
+      default: false,
       select: false,
     },
   },
@@ -83,11 +85,11 @@ UserSchema.pre('save', function (next) {
 });
 
 // ? Filter
-UserSchema.pre(/^find/, function (next) {
-  // this point to current query
-  this.find({ active: true });
-  next();
-});
+// UserSchema.pre(/^find/, function (next) {
+//   // this point to current query
+//   this.find({ active: true });
+//   next();
+// });
 
 // ? Define our own custom document instance methods.
 // ! this refers to the current document
@@ -105,6 +107,20 @@ UserSchema.methods.changedPasswordAfter = function (tokenTimestamp) {
 
   // False mean not changed
   return false;
+};
+
+UserSchema.methods.createVerifyAccountToken = function () {
+  const verifyToken = crypto.randomBytes(32).toString('hex');
+  //! stored encrypted verify account token to db
+  this.verifyAccountToken = crypto
+    .createHash('sha256')
+    .update(verifyToken)
+    .digest('hex');
+
+  // ! Token expires in 7 days
+  this.verifyAccountExpires = Date.now() + 7 * 24 * 60 * 60 * 1000;
+
+  return verifyToken;
 };
 
 UserSchema.methods.createPasswordResetToken = function () {

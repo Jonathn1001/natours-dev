@@ -1,0 +1,12 @@
+extend ../../base
+
+block content
+   main.main
+    .auth-form.text-center
+      h2.heading-secondary.ma-bt-lg Account Activated
+      form.form
+        .form-group 
+          p.form__label Thank you #{firstName}, Your account verified successfully!
+          p.form__label Please use the link below to login to your account
+        .form__group
+          a.btn.btn--small.btn--green(href='/login') Login To Your Account 

@@ -6,8 +6,10 @@ const reviewRouter = require('./reviewRoutes');
 //* Tours Resources
 const router = express.Router();
 
+// ? Get Tour Reviews
 router.use('/:tourId/reviews', reviewRouter);
 
+// ? Get Tour Statistics
 router.route('/tour-stats').get(tourController.getTourStats);
 router
   .route('/monthly-plan/:year')
@@ -29,14 +31,17 @@ router
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
     tourController.createTour
-  ); // => (req, res, next) => {}
+  );
 
-router
-  .route('/tours-within/:distance/center/:latlng/unit/:unit')
-  .get(tourController.getToursWithIn);
+// ? Get The Tours With In The Given Location
+router.get(
+  '/tours-within/:distance/center/:latlng/unit/:unit',
+  tourController.getToursWithIn
+);
+// ? Get Distances From The Given Location To The Tours's Start Location
+router.get('/distances/:latlng/unit/:unit', tourController.getDistances);
 
-router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances);
-
+// ? Tours Management
 router
   .route('/:id')
   .get(tourController.getTour)

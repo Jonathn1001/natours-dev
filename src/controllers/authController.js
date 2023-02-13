@@ -1,6 +1,7 @@
 const { promisify } = require('util');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+
 const User = require('../models/UserModel');
 const { catchAsync } = require('../helper');
 const AppError = require('../utils/AppError');
@@ -39,6 +40,13 @@ exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, password, confirmPassword, passwordChangedAt } =
     req.body;
 
+  // 1. Check if email already exists
+  const user = await User.findOne({ email });
+  if (user) {
+    return new AppError('User with given email already exist!', 400);
+  }
+
+  // 2. If not, Create new user
   const newUser = await User.create({
     name,
     email,
@@ -47,11 +55,58 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordChangedAt,
   });
 
-  const url = `${req.protocol}://${req.get('host')}/me`;
+  // 3. Generate verify token
+  const verifyToken = newUser.createVerifyAccountToken();
+  await newUser.save({ validateBeforeSave: false });
 
-  createSendToken(newUser, 201, req, res);
+  // 4. Send verification email
+  try {
+    const url = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/verify-account/${verifyToken}`;
+    await new Email(newUser, url).sendAccountVerification();
+    // 3. Send back the user
+    res.locals.firstName = newUser.name;
+    createSendToken(newUser, 201, req, res);
+  } catch (error) {
+    // a. if we got an error, clear token in database
+    newUser.verifyAccountToken = undefined;
+    newUser.verifyAccountExpires = undefined;
+    await newUser.save({ validateBeforeSave: false });
+    // b. send error
+    const err = new AppError(
+      'There was an error when sending the email. Try again later',
+      500
+    );
+    return next(err);
+  }
+});
 
-  await new Email(newUser, url).sendWelcome();
+exports.verifyAccount = catchAsync(async (req, res, next) => {
+  // 1. Get the user based on the token
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+  const user = await User.findOne({
+    verifyAccountToken: hashedToken,
+    // ? check if token has not expired yet
+    verifyAccountExpires: { $gte: Date.now() },
+  });
+
+  if (!user) {
+    const err = new AppError('Token is invalid or has expired', 400);
+    return next(err);
+  }
+  // 2. If token has not expired, and there is user, set the active status to true
+  user.active = true;
+  user.verifyAccountToken = undefined;
+  user.verifyAccountExpires = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  // 3. Send the token to the client
+  res.locals.firstName = user.name;
+  res.redirect('/active-account');
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -137,7 +192,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     token,
     process.env.JWT_SECRET_KEY
   );
-
   // 3. Check if user still exists
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
@@ -188,7 +242,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 2. Generate the random token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
-
   // 3. Send it to user's email
   try {
     const resetURL = `${req.protocol}://${req.get(
@@ -236,7 +289,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetExpires = undefined;
   await user.save();
   // 3. Update the passwordChangedAt property for the user
-
+  //    - we do this by using pre-save middleware in User model
   // 4. Log the user in, send JWT
   createSendToken(user, 200, req, res);
 });
