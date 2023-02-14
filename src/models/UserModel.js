@@ -37,7 +37,7 @@ const UserSchema = mongoose.Schema(
       validate: {
         // !! this only work on CREATE() and SAVE() !!!
         validator: function (confirmPwd) {
-          return validator.matches(confirmPwd, this.password);
+          return confirmPwd === this.password;
         },
         message: 'Confirm password does not match',
       },
