@@ -1406,3 +1406,11 @@ body {
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
 }
+
+.forgot-password {
+  color: #55c57a;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.2rem;
+  margin-top: 0.75rem;
+}

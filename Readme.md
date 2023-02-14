@@ -1,6 +1,6 @@
 # 🌲 Natours Application
 
-This repo contains project files and configuration
+This repository contains project files and configuration
 
 # :wrench: Backend
 

@@ -11,7 +11,7 @@ router.get('/verify-account/:token', authController.verifyAccount);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 router.post('/forgot-password', authController.forgotPassword);
-router.get('/reset-password/:token', authController.resetPassword);
+router.post('/reset-password', authController.resetPassword);
 
 // ? Protect all routes after this middleware
 router.use(authController.protect);

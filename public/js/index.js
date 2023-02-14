@@ -2,6 +2,8 @@
 // import 'node_modules/@babel/polyfill';
 import { displayMap } from './mapbox.js';
 import { login, logout } from './login.js';
+import { forgotPassword } from './forgotPassword.js';
+import { resetPassword } from './resetPassword.js';
 import { signup } from './signup.js';
 import { updateSettings } from './updateSettings.js';
 import { bookTour } from './stripe.js';
@@ -12,9 +14,11 @@ const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const signupForm = document.querySelector('.form--sign-up');
 const logOutBtn = document.querySelector('.nav__el--logout');
-const userDataForm = document.querySelector('.form-user-data');
-const userPasswordForm = document.querySelector('.form-user-password');
+const userDataForm = document.querySelector('.form--user-data');
+const userPasswordForm = document.querySelector('.form--user-password');
 const bookingTourBtn = document.getElementById('book-tour');
+const forgotPasswordForm = document.querySelector('.form--forgot-password');
+const resetPasswordForm = document.querySelector('.form--reset-password');
 
 // DELEGATION
 if (mapBox) {
@@ -89,6 +93,22 @@ if (bookingTourBtn) {
     await bookTour(tourId);
   });
 }
+
+if (forgotPasswordForm)
+  forgotPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    await forgotPassword(email);
+  });
+
+if (resetPasswordForm)
+  resetPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const token = window.location.pathname.split('/')[2];
+    await resetPassword(password, confirmPassword, token);
+  });
 
 const alertMessage = document.querySelector('body').dataset.alert;
 if (alertMessage) showAlert('success', alertMessage, 10);
