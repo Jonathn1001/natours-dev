@@ -296,6 +296,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 2. If true, update password
   user.password = password;
   user.confirmPassword = confirmPassword;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
   // 3. Log user in, send JWT
   createSendToken(user, 200, req, res);
 });
