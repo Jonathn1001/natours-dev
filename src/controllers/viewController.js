@@ -59,6 +59,12 @@ exports.getActiveAccountForm = catchAsync(async (req, res) => {
   });
 });
 
+exports.getForgotPasswordForm = catchAsync(async (req, res) => {
+  res.status(200).render('pages/auth/forgot-password', {
+    title: 'Forgot password',
+  });
+});
+
 exports.getMe = catchAsync(async (req, res) => {
   res.status(200).render('pages/user/account', {
     title: 'Your Account',

@@ -93,7 +93,6 @@ exports.verifyAccount = catchAsync(async (req, res, next) => {
     // ? check if token has not expired yet
     verifyAccountExpires: { $gte: Date.now() },
   });
-
   if (!user) {
     const err = new AppError('Token is invalid or has expired', 400);
     return next(err);
@@ -103,7 +102,6 @@ exports.verifyAccount = catchAsync(async (req, res, next) => {
   user.verifyAccountToken = undefined;
   user.verifyAccountExpires = undefined;
   await user.save({ validateBeforeSave: false });
-
   // 3. Send the token to the client
   res.locals.firstName = user.name;
   res.redirect('/active-account');
@@ -116,14 +114,12 @@ exports.login = catchAsync(async (req, res, next) => {
     const err = new AppError('Please provide email and password', 400);
     return next(err);
   }
-
   // 2. Check if user exists or password is correct
   const user = await User.findOne({ email }).select('+password');
   if (!user || !(await user.correctPassword(password, user.password))) {
     const err = new AppError('Incorrect Email Or Password', 401);
     return next(err);
   }
-
   // 3. If everything is okay, send the token back
   createSendToken(user, 200, req, res);
 });
@@ -132,23 +128,20 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
     try {
-      // 2. Verify the token (promisfy return a function that return a promise) => 2 cases caught error: JsonWebTokenError and TokenExpiredError
+      // 1. Verify the token (promisfy return a function that return a promise) => 2 cases caught error: JsonWebTokenError and TokenExpiredError
       const decoded = await promisify(jwt.verify)(
         req.cookies.jwt,
         process.env.JWT_SECRET_KEY
       );
-
       // 2. Check if user still exists
       const currentUser = await User.findById(decoded.id);
       if (!currentUser) {
         return next();
       }
-
       // 3.Check if user changed password after the token was issued
       if (currentUser.changedPasswordAfter(decoded.iat)) {
         return next();
       }
-
       // * There is a logged in user (put the user into res.local in order to used pug template)
       res.locals.user = currentUser;
       return next();
@@ -246,7 +239,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   try {
     const resetURL = `${req.protocol}://${req.get(
       'host'
-    )}/api/v1/users/reset-password/${resetToken}`;
+    )}/reset-password/${resetToken}`;
     await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
@@ -266,13 +259,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.resetPassword = catchAsync(async (req, res, next) => {
+exports.validateResetPasswordToken = catchAsync(async (req, res, next) => {
   // 1. Get the user based on the token
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.params.token)
     .digest('hex');
-
   const user = await User.findOne({
     passwordResetToken: hashedToken,
     // ? check if token has not expired yet
@@ -282,15 +274,29 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     const err = new AppError('Token is invalid or has expired', 400);
     return next(err);
   }
-  // 2. If token has not expired, and there is user, set the new password
-  user.password = req.body.password;
-  user.confirmPassword = req.body.confirmPassword;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
-  await user.save();
-  // 3. Update the passwordChangedAt property for the user
-  //    - we do this by using pre-save middleware in User model
-  // 4. Log the user in, send JWT
+  // 2. If token has not expired, and there is user, render the reset password page
+  res.status(200).render('pages/auth/reset-password', {
+    title: 'Reset password',
+  });
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  const { password, confirmPassword, token } = req.body;
+  // 1. Get the user based on the token
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    // ? check if token has not expired yet
+    passwordResetExpires: { $gte: Date.now() },
+  });
+  if (!user) {
+    const err = new AppError('Token is invalid or has expired', 400);
+    return next(err);
+  }
+  // 2. If true, update password
+  user.password = password;
+  user.confirmPassword = confirmPassword;
+  // 3. Log user in, send JWT
   createSendToken(user, 200, req, res);
 });
 

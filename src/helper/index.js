@@ -21,6 +21,7 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
+// ? Resize user uploaded image (as a buffer)
 const resizeImage = (buffer, width, height, folder, fileName) =>
   sharp(buffer)
     .resize(width, height)
@@ -33,7 +34,7 @@ const catchAsync = (fn) => (req, res, next) => {
   fn(req, res, next).catch(next);
 };
 
-// ? Filter Object by allowed fields
+// ? Filter object by allowed fields
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((item) => {
