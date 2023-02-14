@@ -1,14 +1,14 @@
 /* eslint-disable */
 import { showAlert } from './alerts.js';
 
-export const resetPassword = async (password, confirmation, token) => {
+export const resetPassword = async (password, confirmPassword, token) => {
   try {
     const res = await axios({
       method: 'POST',
       url: '/api/v1/users/reset-password',
       data: {
         password,
-        confirmation,
+        confirmPassword,
         token,
       },
     });
